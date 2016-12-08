@@ -51,6 +51,12 @@ module Bunny
         else
           raise Timeout::Error, "IO timeout when reading #{count} bytes"
         end
+      rescue => unhandled
+        $STDERR.puts("Unhandled exception of type #{unhandled.class}: #{unhandled.message}")
+        if defined?(Rails)
+          Rails.logger.error("Unhandled exception of type #{unhandled.class}: #{unhandled.message}")
+        end
+        raise unhandled
       end
       value
     end # read_fully
